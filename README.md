@@ -6,6 +6,10 @@ https://dumps.wikimedia.org/enwiki/20231101/enwiki-20231101-pages-articles-multi
 
 https://dumps.wikimedia.org/enwiki/20231101/enwiki-20231101-pages-articles-multistream-index.txt.bz2
 
+Lien de la présentation sur Google Slides : 
+
+https://docs.google.com/presentation/d/1w3oenm_fEwmVxAVO64WVFI0U7ezsdlDVOIkO2tqmeK0/edit?usp=sharing
+
 ## Sujet : 
 
 Le jeu de données Wikipedia (Anglais, texte, 20Go) est intéressant et utile pour sa variété, son utilité sociale-intellectuelle
