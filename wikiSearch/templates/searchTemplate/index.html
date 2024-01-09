@@ -1,0 +1,58 @@
+{% load static %}
+<link rel="stylesheet" href="{%static 'css/style.css'%}">
+<script src="https://kit.fontawesome.com/4a631b26fd.js" crossorigin="anonymous"></script>
+<form method="GET">
+    {% csrf_token %}
+<h1><code>::WikiSearch</code></h1>
+
+<p>Découvrez notre toute nouvelle application, WikiSearch, votre compagnon intelligent pour explorer le vaste univer de la connaissance disponible sur Wikipedia. Grâce à une interface conviviale et intuitive, WikiSearch vous permet de trouver rapidement tous les articles liés à un mot ou à une liste de mots au sein de la riche base de données de l'encyclopédie en ligne la plus complète.</p>
+
+<blockquote>
+  <p>Commencez votre essai gratuit:</p>
+  <div class="search-box">
+    <button class="btn-search"><i class="fas fa-search"></i></button>
+    <input type="text" name="request" class="input-search" placeholder="Type to Search...">
+    
+  </div>
+</blockquote>
+<!--
+<blockquote>
+    <p>Commencez votre essai gratuit:</p>
+    <div class="search-box">
+      <button class="btn-search"><i class="fa-solid fa-paper-plane"></i></button>
+      <input type="text" name="request" class="input-search" placeholder="Type to Search...">
+      
+    </div>
+  </blockquote>
+<blockquote>
+<div>
+    <button class="btn-search"><i class="fa-solid fa-paper-plane"></i></button>
+    <input type="submit">
+</div>
+</blockquote>
+-->
+</form>
+{% if table.rows|length > 0  %}
+{% block content %}
+    <h2>Résultats de la recherche</h2>
+
+    <table>
+        <thead>
+            <tr>
+                {% for column in table.field_names %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table.rows %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% endif %}
