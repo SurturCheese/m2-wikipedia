@@ -34,3 +34,23 @@ rendre un résultat chiffré que seul l’utilisateur peut déchiffrer.
 • ❌ Livrables: un document latex/Word en format IEEE à deux colonnes (guide utilisateur, documentation
 développeur, exemples de requêtes, analyse des performances), fichiers de test, données sur la performance
 (tableaux csv avec explication des champs), code source.
+
+
+## Install :
+    • installez python
+    • installez pip
+    • recuperez le projet sur git : https://github.com/SurturCheese/m2-wikipedia/tree/WikiSearch
+    • placez vous dans le dossier m2-wikipedia
+    • checkout la branche Wikisearch : git checkout WikiSearch
+    • créez un virtual env : python -m venv /*nomVirtualEnv*/
+    • activez le virtual env : /*nomVirtualEnv*/ +\Scripts\activate
+    • executez le fichier requirements.txt : pip install -r requirements.txt
+
+## exécution :
+    • python wikiSearch\manage.py runserver
+    
+## stop :
+    • Ctrl + c
+    • deactivate
+
+    
