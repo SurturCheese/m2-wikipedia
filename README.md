@@ -35,22 +35,29 @@ rendre un résultat chiffré que seul l’utilisateur peut déchiffrer.
 développeur, exemples de requêtes, analyse des performances), fichiers de test, données sur la performance
 (tableaux csv avec explication des champs), code source.
 
+# GUI
 
-## Install :
-    • installez python
-    • installez pip
-    • recuperez le projet sur git : https://github.com/SurturCheese/m2-wikipedia/tree/WikiSearch
-    • placez vous dans le dossier m2-wikipedia
-    • checkout la branche Wikisearch : git checkout WikiSearch
-    • créez un virtual env : python -m venv /*nomVirtualEnv*/
-    • activez le virtual env : /*nomVirtualEnv*/ +\Scripts\activate
-    • executez le fichier requirements.txt : pip install -r requirements.txt
+## Installation :
+- Installer Python
 
-## exécution :
-    • python wikiSearch\manage.py runserver
+- Recuperer le projet sur git : `git clone https://github.com/SurturCheese/m2-wikipedia/tree/WikiSearch`
+
+- Placer vous dans le dossier m2-wikipedia: `cd m2-wikipedia/`
+
+- Changer de branche vers WikiSearch : `git checkout WikiSearch`
+
+- Créer un virtual env : `python -m venv <nomVirtualEnv>`
+
+- Activer le virtual env : 
+    - Pour Windows : `<nomVirtualEnv>\Scripts\activate.ps1`
+    - Pour Linux/Mac : `source <nomVirtualEnv>/Scripts/activate`
+
+- Installer les bibliothèques nécessaire : `pip install -r requirements.txt`
+
+## Exécution :
+    python wikiSearch\manage.py runserver
     
-## stop :
-    • Ctrl + c
-    • deactivate
-
+## Arrêt :
+- Arrêter le serveur : `CTRL + C`
     
+- Sortir du virtual env : `deactivate`
