@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from prettytable import PrettyTable
 from django.conf import settings
+import time
+import json
+import os
 
 # Default dataset filename
 DEFAULT_DATASET = "x0.3r.parquet"
@@ -8,17 +11,38 @@ DEFAULT_DATASET = "x0.3r.parquet"
 def index(request):
     input_string = request.GET.get('request')
     result_table = PrettyTable(["Result"])
+    
+    start_time = time.time()
+    
     df = parse_and_call_function(input_string, settings.SPARK, result_table)
 
     if input_string:
         if 'COUNT' in input_string:
             result_table.add_row([f"Number of rows: {df.count()}"])
         elif 'TITLE' not in input_string or 'SET' not in input_string or 'CATEGORY' not in input_string:
-            pass
+            pass    
         else:
             result_table.add_row(df.collect())
         
     context = {"table": result_table}
+    
+    end_time = time.time()
+    
+    time_difference = end_time - start_time
+    data = {"time": time_difference, "query" : input_string }
+
+    if os.path.exists('result.json'):
+        with open('result.json', 'r') as f:
+            existing_data = json.load(f)
+            existing_data.append(data)
+        with open('result.json', 'w') as f:
+            json.dump(existing_data, f)
+    else:
+        with open('result.json', 'w') as f:
+            json.dump([data], f)
+
+    print(f"Time taken: {time_difference} seconds")
+    
     return render(request, 'searchTemplate/index.html', context)
 
 def parse_and_call_function(input_string, spark, result_table):
