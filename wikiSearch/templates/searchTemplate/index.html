@@ -5,32 +5,22 @@
     {% csrf_token %}
 <h1><code>::WikiSearch</code></h1>
 
-<p>Découvrez notre toute nouvelle application, WikiSearch, votre compagnon intelligent pour explorer le vaste univer de la connaissance disponible sur Wikipedia. Grâce à une interface conviviale et intuitive, WikiSearch vous permet de trouver rapidement tous les articles liés à un mot ou à une liste de mots au sein de la riche base de données de l'encyclopédie en ligne la plus complète.</p>
+<p>Voici la syntaxe de requête disponible :</p>
+<ul>
+    <li>TITLE &lt;recherche&gt; - Pour rechercher un article avec le titre donné</li>
+    <li>CATEGORY &lt;recherche&gt; - Pour chercher un article par catégorie</li>
+    <li>CONTAINS &lt;recherche&gt; - Tout ce qui a le terme demandé</li>
+</ul>
 
 <blockquote>
-  <p>Commencez votre essai gratuit:</p>
+  <p>Entrer votre requête ici:</p>
   <div class="search-box">
     <button class="btn-search"><i class="fas fa-search"></i></button>
     <input type="text" name="request" class="input-search" placeholder="Type to Search...">
     
   </div>
 </blockquote>
-<!--
-<blockquote>
-    <p>Commencez votre essai gratuit:</p>
-    <div class="search-box">
-      <button class="btn-search"><i class="fa-solid fa-paper-plane"></i></button>
-      <input type="text" name="request" class="input-search" placeholder="Type to Search...">
-      
-    </div>
-  </blockquote>
-<blockquote>
-<div>
-    <button class="btn-search"><i class="fa-solid fa-paper-plane"></i></button>
-    <input type="submit">
-</div>
-</blockquote>
--->
+
 </form>
 {% if table.rows|length > 0  %}
 {% block content %}
