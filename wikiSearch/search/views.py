@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from pyspark.sql import SparkSession
 from prettytable import PrettyTable
+from django.conf import settings
+
 
 # Default dataset filename
 DEFAULT_DATASET = "data.parquet"
@@ -8,13 +10,8 @@ DEFAULT_DATASET = "data.parquet"
 def index(request):
     input_string = request.GET.get('request')
 
-    spark = SparkSession.builder.appName("wikipedia").getOrCreate()
-
     # Parse and execute the command
-    result_table = parse_and_call_function(input_string, spark)
-
-    # Stop the Spark session
-    spark.stop()
+    result_table = parse_and_call_function(input_string, settings.SPARK)
 
     context = {"table": result_table}
     return render(request, 'searchTemplate/index.html', context)
