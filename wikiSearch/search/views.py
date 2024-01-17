@@ -5,7 +5,7 @@ import time
 import json
 import os
 
-DEFAULT_DATASET = "x0.3r.parquet"
+DEFAULT_DATASET = "x0.1r.parquet"
 
 def index(request):
     input_string = request.GET.get('request')
@@ -18,9 +18,12 @@ def index(request):
     if input_string:
         if 'COUNT' in input_string:
             result_table.add_row([f"Number of rows: {df.count()}"])   
-        elif ( 'TITLE' in input_string or 'SET' in input_string or 'CATEGORY' in input_string ) and 'DATASET' in input_string:
-            result_table.add_row(df.collect())
-        
+        elif 'DATASET' in input_string and not ( 'TITLE' in input_string or 'CONTAINS' in input_string or 'CATEGORY' in input_string ):
+            pass
+        else:
+            print("je suis ")
+            df.collect()
+
     context = {"table": result_table}
     
     end_time = time.time()
