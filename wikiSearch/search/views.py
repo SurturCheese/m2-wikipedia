@@ -5,7 +5,6 @@ import time
 import json
 import os
 
-# Default dataset filename
 DEFAULT_DATASET = "x0.3r.parquet"
 
 def index(request):
@@ -18,10 +17,8 @@ def index(request):
 
     if input_string:
         if 'COUNT' in input_string:
-            result_table.add_row([f"Number of rows: {df.count()}"])
-        elif 'TITLE' not in input_string or 'SET' not in input_string or 'CATEGORY' not in input_string:
-            pass    
-        else:
+            result_table.add_row([f"Number of rows: {df.count()}"])   
+        elif ( 'TITLE' in input_string or 'SET' in input_string or 'CATEGORY' in input_string ) and 'DATASET' in input_string:
             result_table.add_row(df.collect())
         
     context = {"table": result_table}
