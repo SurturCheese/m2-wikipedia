@@ -2,3 +2,5 @@ django
 requests
 prettytable
 pyspark
+transformers
+tensorflow

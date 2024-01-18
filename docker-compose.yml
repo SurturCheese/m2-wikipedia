@@ -1,0 +1,15 @@
+services:
+  wikipedia:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "8000:8000"
+      - "4040:4040"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

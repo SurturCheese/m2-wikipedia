@@ -106,4 +106,8 @@ def search_category(df, category):
 
 def contains(df, keyword):
     return df.filter(df["revision"]["text"]["_VALUE"].contains(keyword))
+
+def sentiment_analysis(data):
+    text = data["revision"]["text"]["_VALUE"][:511]
+    return settings.SENTIMENT_PIPELINE(text)
     
