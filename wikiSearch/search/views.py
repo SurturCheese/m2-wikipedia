@@ -54,7 +54,7 @@ def parse_and_execute_commands(input_string, spark, result_table):
     global DATAFRAME
     DATAFRAME = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
 
-    words = re.findall(r'(?:[^\s"]|"(?:\\.|[^"])*")+', input_string)
+    words = re.findall(r'(?:\w+|"[^"]*")', input_string)
     print(words)
     if len(words) > 0:
         i = 0
