@@ -88,7 +88,7 @@ def parse_and_execute_commands(input_string, spark, result_table):
                     execute_search_command(contains, phrase, spark)
                 else:
                     result_table.add_row(["Invalid CONTAINS command: Phrase should be enclosed in double quotes"])
-            elif command == "COUNT" or command == "DATASET" or command in DATASETS:
+            elif command == "COUNT" or command == "DATASET" or command in DATASETS or command == "AND":
                 pass
             else:
                 result_table.add_row(["Invalid command"])
