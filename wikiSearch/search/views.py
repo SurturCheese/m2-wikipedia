@@ -26,6 +26,8 @@ def index(request):
             pass
         else:
             DATAFRAME.collect()
+            save_result_to_file(result)
+
 
     context = {"table": result_table}
 
@@ -124,3 +126,8 @@ def search_category(category):
 def contains(keyword):
     global DATAFRAME
     DATAFRAME = DATAFRAME.filter(DATAFRAME["revision"]["text"]["_VALUE"].contains(keyword))
+
+def save_result_to_file(result):
+    with open('output_result.txt', 'w') as f:
+        for row in result:
+            f.write(str(row) + '\n')
