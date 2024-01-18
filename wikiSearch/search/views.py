@@ -53,7 +53,7 @@ def index(request):
 def parse_and_execute_commands(input_string, spark, result_table):
     global DATAFRAME
     DATAFRAME = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
-
+    reset_dataframe = True 
     words = re.findall(r'(?:\w+|"[^"]*")', input_string)
     print(words)
     if len(words) > 0:
@@ -73,21 +73,24 @@ def parse_and_execute_commands(input_string, spark, result_table):
                 print("TITLE")
                 if words[i + 1].startswith('"') and words[i + 1].endswith('"'):
                     phrase = words[i + 1][1:-1]
-                    execute_search_command(search_title, phrase, spark)
+                    execute_search_command(search_title, phrase, spark, reset_dataframe)
+                    reset_dataframe = False
                 else:
                     result_table.add_row(["Invalid TITLE command: Phrase should be enclosed in double quotes"])
             elif command == "CATEGORY" and i + 1 < len(words):
                 print("CATEGORY")
                 if words[i + 1].startswith('"') and words[i + 1].endswith('"'):
                     category = words[i + 1][1:-1]
-                    execute_search_command(search_category, category, spark)
+                    execute_search_command(search_category, category, spark, reset_dataframe)
+                    reset_dataframe = False
                 else:
                     result_table.add_row(["Invalid CATEGORY command: Phrase should be enclosed in double quotes"])
             elif command == "CONTAINS" and i + 1 < len(words):
                 print("CONTAINS")
                 if words[i + 1].startswith('"') and words[i + 1].endswith('"'):
                     phrase = words[i + 1][1:-1]
-                    execute_search_command(contains, phrase, spark)
+                    execute_search_command(contains, phrase, spark, reset_dataframe)
+                    reset_dataframe = False
                 else:
                     result_table.add_row(["Invalid CONTAINS command: Phrase should be enclosed in double quotes"])
             elif command == "COUNT" or command == "DATASET" or command in DATASETS or command == "AND":
@@ -110,9 +113,10 @@ def set_dataset(dataset_name):
     print('default dataset' + DEFAULT_DATASET)
     return [f"Changed dataset to {DEFAULT_DATASET}"]
 
-def execute_search_command(search_function, argument, spark):
-    global DATAFRAME
-    DATAFRAME = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
+def execute_search_command(search_function, argument, spark, reset_dataframe):
+    if reset_dataframe:
+        global DATAFRAME
+        DATAFRAME = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
     search_function(argument)
 
 def search_title(title):
