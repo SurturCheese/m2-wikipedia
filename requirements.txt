@@ -4,3 +4,5 @@ prettytable
 pyspark
 transformers
 tensorflow
+pytz
+tzdata
