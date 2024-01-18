@@ -7,22 +7,25 @@ import os
 import re
 
 DEFAULT_DATASET = "x0.1r.parquet"
-
+DATAFRAME = settings.SPARK.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
+DATASETS = ["x0.01r", "x0.05r", "x0.1r", "x0.2r", "x0.3r"]
 def index(request):
+    global DEFAULT_DATASET
+    print(DEFAULT_DATASET)
     input_string = request.GET.get('request')
     result_table = PrettyTable(["Result"])
 
     start_time = time.time()
-
-    df = parse_and_execute_commands(input_string, settings.SPARK, result_table)
+    if input_string:
+        parse_and_execute_commands(input_string, settings.SPARK, result_table)
 
     if input_string:
         if 'COUNT' in input_string:
-            result_table.add_row([f"Number of rows: {df.count()}"])
+            result_table.add_row([f"Number of rows: {DATAFRAME.count()}"])
         elif 'DATASET' in input_string and not ('TITLE' in input_string or 'CONTAINS' in input_string or 'CATEGORY' in input_string):
             pass
         else:
-            df.collect()
+            DATAFRAME.collect()
 
     context = {"table": result_table}
 
@@ -46,11 +49,11 @@ def index(request):
     return render(request, 'searchTemplate/index.html', context)
 
 def parse_and_execute_commands(input_string, spark, result_table):
-    if not input_string:
-        return spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
+    global DATAFRAME
+    DATAFRAME = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
 
     words = re.findall(r'(?:[^\s"]|"(?:\\.|[^"])*")+', input_string)
-
+    print(words)
     if len(words) > 0:
         i = 0
         while i < len(words):
@@ -66,58 +69,58 @@ def parse_and_execute_commands(input_string, spark, result_table):
                     result_table.add_row(result)
             elif command == "TITLE" and i + 1 < len(words):
                 print("TITLE")
-                # Check if the phrase is enclosed in double quotes
                 if words[i + 1].startswith('"') and words[i + 1].endswith('"'):
                     phrase = words[i + 1][1:-1]
-                    return execute_search_command(search_title, phrase, spark)
+                    execute_search_command(search_title, phrase, spark)
                 else:
                     result_table.add_row(["Invalid TITLE command: Phrase should be enclosed in double quotes"])
             elif command == "CATEGORY" and i + 1 < len(words):
                 print("CATEGORY")
-                # Check if the phrase is enclosed in double quotes
                 if words[i + 1].startswith('"') and words[i + 1].endswith('"'):
                     category = words[i + 1][1:-1]
-                    return execute_search_command(search_category, category, spark)
+                    execute_search_command(search_category, category, spark)
                 else:
                     result_table.add_row(["Invalid CATEGORY command: Phrase should be enclosed in double quotes"])
             elif command == "CONTAINS" and i + 1 < len(words):
                 print("CONTAINS")
-                # Check if the phrase is enclosed in double quotes
                 if words[i + 1].startswith('"') and words[i + 1].endswith('"'):
                     phrase = words[i + 1][1:-1]
-                    return execute_search_command(contains, phrase, spark)
+                    execute_search_command(contains, phrase, spark)
                 else:
                     result_table.add_row(["Invalid CONTAINS command: Phrase should be enclosed in double quotes"])
+            elif command == "COUNT" or command == "DATASET" or command in DATASETS:
+                pass
             else:
                 result_table.add_row(["Invalid command"])
             i += 1
-
     return spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
-
 
 def extract_quoted_phrase(input_string):
     match = re.search(r'"([^"]*)"', input_string)
     return match.group(1) if match else ""
 
 def set_dataset(dataset_name):
+    print(dataset_name)
     parquet_file = f"{dataset_name}.parquet"
-    try:
-        global DEFAULT_DATASET
-        DEFAULT_DATASET = parquet_file
-        return [f"Changed dataset to {DEFAULT_DATASET}"]
-    except Exception as e:
-        return [f"Error changing dataset to {DEFAULT_DATASET}", str(e)]
+    global DEFAULT_DATASET
+    print('default dataset' + DEFAULT_DATASET)
+    DEFAULT_DATASET = parquet_file
+    print('default dataset' + DEFAULT_DATASET)
+    return [f"Changed dataset to {DEFAULT_DATASET}"]
 
 def execute_search_command(search_function, argument, spark):
-    df = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
-    return search_function(df, argument)
+    global DATAFRAME
+    DATAFRAME = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
+    search_function(argument)
 
-def search_title(df, title):
-    print('title : ' + title)
-    return df.filter(df["title"].contains(title))
+def search_title(title):
+    global DATAFRAME
+    DATAFRAME = DATAFRAME.filter(DATAFRAME["title"].contains(title))
 
-def search_category(df, category):
-    return df.filter(df["revision"]["text"]["_VALUE"].contains("[[Categories: " + category + "]]"))
+def search_category(category):
+    global DATAFRAME
+    DATAFRAME = DATAFRAME.filter(DATAFRAME["revision"]["text"]["_VALUE"].contains("[[Categories: " + category + "]]"))
 
-def contains(df, keyword):
-    return df.filter(df["revision"]["text"]["_VALUE"].contains(keyword))
+def contains(keyword):
+    global DATAFRAME
+    DATAFRAME = DATAFRAME.filter(DATAFRAME["revision"]["text"]["_VALUE"].contains(keyword))
