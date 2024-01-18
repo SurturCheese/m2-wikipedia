@@ -22,6 +22,10 @@ def index(request):
     if input_string:
         if 'COUNT' in input_string:
             result_table.add_row([f"Number of rows: {DATAFRAME.count()}"])
+        elif 'SENTIMENT' in input_string:
+            rows = DATAFRAME.collect()
+            for row in rows:
+                result_table.add_row([f"Title: {row['title']} Sentiment: {sentiment_analysis(row)}"])
         elif 'DATASET' in input_string and not ('TITLE' in input_string or 'CONTAINS' in input_string or 'CATEGORY' in input_string):
             pass
         else:
@@ -130,6 +134,10 @@ def search_category(category):
 def contains(keyword):
     global DATAFRAME
     DATAFRAME = DATAFRAME.filter(DATAFRAME["revision"]["text"]["_VALUE"].contains(keyword))
+
+def sentiment_analysis(data):
+    text = data["revision"]["text"]["_VALUE"][:511]
+    return settings.SENTIMENT_PIPELINE(text)
 
 def save_result_to_file(result):
     with open('output_result.txt', 'w') as f:

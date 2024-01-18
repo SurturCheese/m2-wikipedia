@@ -131,3 +131,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 from pyspark.sql import SparkSession
 
 SPARK = SparkSession.builder.appName("wikipedia").getOrCreate()
+
+from transformers import pipeline
+
+SENTIMENT_PIPELINE = pipeline("sentiment-analysis")
