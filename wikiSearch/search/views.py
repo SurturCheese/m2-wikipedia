@@ -62,6 +62,7 @@ def parse_and_execute_commands(input_string, spark, result_table):
                     i += 3
                     continue
                 elif len(words) == i + 3:
+                    i += 2
                     result_table.add_row(result)
             elif command == "TITLE" and i + 1 < len(words):
                 print("TITLE")
