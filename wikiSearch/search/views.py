@@ -8,7 +8,7 @@ import re
 
 DEFAULT_DATASET = "x0.1r.parquet"
 DATAFRAME = settings.SPARK.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
-DATASETS = ["x0.01r", "x0.05r", "x0.1r", "x0.2r", "x0.3r"]
+DATASETS = ["x0.01r", "x0.05r", "x0.1r", "x0.2r", "x0.3r", "x0.4r"]
 def index(request):
     global DEFAULT_DATASET
     print(DEFAULT_DATASET)
