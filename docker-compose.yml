@@ -1,0 +1,11 @@
+services:
+  wikipedia:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    command: python wikiSearch/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+      - "4040:4040"
+      - "4041:4041"
+      

@@ -1,0 +1,65 @@
+{% load static %}
+<link rel="stylesheet" href="{%static 'css/style.css'%}">
+<script src="https://kit.fontawesome.com/4a631b26fd.js" crossorigin="anonymous"></script>
+<form method="GET">
+    {% csrf_token %}
+<h1><code>::WikiSearch</code></h1>
+
+<p>Voici la syntaxe de requête disponible :</p>
+<ul>
+    <li>SET DATASET &lt;nom de dataset&gt; - Pour changer de dataset</li>
+    <li>TITLE "mots" - Pour rechercher un article avec le titre donné</li>
+    <li>CATEGORY "mots" - Pour chercher un article par catégorie</li>
+    <li>CONTAINS "mots" - Tout ce qui a le terme demandé</li>
+    <li>COUNT à la fin de la requête - Comptes les résultats de la requête</li>
+    <li>SENTIMENT à la fin de la requête - Fait une analyse de sentiment</li>
+</ul>
+
+<p>Plusieurs dataset sont disponible :</p>
+<ul>
+    <li>x0.01r - dataset tronqué à 1%</li>
+    <li>x0.05r - dataset tronqué à 5%</li>
+    <li>x0.1r - dataset tronqué à 10%</li>
+    <li>x0.2r - dataset tronqué à 20%</li>
+    <li>x0.3r - dataset tronqué à 30%</li>
+</ul>
+
+<p>Combinaison possible :</p>
+<ul>
+    <li>&lt;requête&gt; AND &lt;requête&gt; - Donnée satisfaisant les deux requêtes</li>
+</ul>
+
+<blockquote>
+  <p>Entrer votre requête ici:</p>
+  <div class="search-box">
+    <button class="btn-search"><i class="fas fa-search"></i></button>
+    <input type="text" name="request" class="input-search" placeholder="Type to Search...">
+    
+  </div>
+</blockquote>
+
+</form>
+{% if table.rows|length > 0  %}
+{% block content %}
+    <h2>Résultats de la recherche</h2>
+
+    <table>
+        <thead>
+            <tr>
+                {% for column in table.field_names %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table.rows %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% endif %}
