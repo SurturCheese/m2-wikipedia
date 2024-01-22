@@ -22,14 +22,18 @@ def index(request):
     if input_string:
         if 'COUNT' in input_string:
             result_table.add_row([f"Number of rows: {DATAFRAME.count()}"])
-        elif 'SENTIMENT' in input_string:
+        if 'SENTIMENT' in input_string:
             rows = DATAFRAME.collect()
             for row in rows:
-                result_table.add_row([f"Title: {row['title']} Sentiment: {sentiment_analysis(row)}"])
+                if len(result_table.rows) < 25:
+                    result_table.add_row([f"Title: {row['title']} Sentiment: {sentiment_analysis(row)}"])
+                else:
+                    result_table.add_row([f"And {len(rows)-25} more rows..."])
+                    break
         elif 'DATASET' in input_string and not ('TITLE' in input_string or 'CONTAINS' in input_string or 'CATEGORY' in input_string):
             pass
         else:
-            DATAFRAME.collect()
+            result = DATAFRAME.collect()
             save_result_to_file(result)
 
 
@@ -58,7 +62,7 @@ def parse_and_execute_commands(input_string, spark, result_table):
     global DATAFRAME
     DATAFRAME = spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
     reset_dataframe = True 
-    words = re.findall(r'(?:\w+|"[^"]*")', input_string)
+    words = re.findall(r'(?:\w+\.?\w*|"[^"]*")', input_string)
     print(words)
     if len(words) > 0:
         i = 0
@@ -99,8 +103,6 @@ def parse_and_execute_commands(input_string, spark, result_table):
                     result_table.add_row(["Invalid CONTAINS command: Phrase should be enclosed in double quotes"])
             elif command == "COUNT" or command == "DATASET" or command in DATASETS or command == "AND":
                 pass
-            else:
-                result_table.add_row(["Invalid command"])
             i += 1
     return spark.read.parquet(f"wikiSearch/search/data/{DEFAULT_DATASET}")
 
