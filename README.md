@@ -23,6 +23,10 @@ https://www.dropbox.com/scl/fo/ui38w0l8iy4wy3pz0jini/h?rlkey=pwc9tgtgxxz1am7natk
 
 - Lancer avec : `python wikiSearch/manage.py runserver`
 
+## Interface :
+
+    http://localhost:8000
+
 ## Arrêt :
 - Arrêter le serveur : `CTRL + C`
     
